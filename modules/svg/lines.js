@@ -167,6 +167,9 @@ export function svgLines(projection, context) {
         }
 
         ways = ways.filter(getPath);
+        if(context.hideLines) {
+            ways = [];
+        }
         pathdata = _groupBy(ways, function(way) { return way.layer(); });
 
         _forOwn(pathdata, function(v, k) {

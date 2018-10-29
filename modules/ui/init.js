@@ -29,6 +29,7 @@ import { uiIntro } from './intro';
 import { uiLoading } from './loading';
 import { uiMapData } from './map_data';
 import { uiMapInMap } from './map_in_map';
+import { uiML } from './ml';
 import { uiModes } from './modes';
 import { uiNotice } from './notice';
 import { uiRestore } from './restore';
@@ -106,6 +107,11 @@ export function uiInit(context) {
             .append('div')
             .attr('class', 'button-wrap joined col3')
             .call(uiModes(context), limiter);
+
+        limiter
+             .append('div')
+             .attr('class', 'button-wrap joined col1')
+            .call(uiML(context));
 
         limiter
             .append('div')

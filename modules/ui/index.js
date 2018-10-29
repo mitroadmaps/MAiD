@@ -33,6 +33,7 @@ export { uiLasso } from './lasso';
 export { uiLoading } from './loading';
 export { uiMapData } from './map_data';
 export { uiMapInMap } from './map_in_map';
+export { uiML } from './ml';
 export { uiModal } from './modal';
 export { uiModes } from './modes';
 export { uiNotice } from './notice';

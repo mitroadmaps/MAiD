@@ -36,6 +36,7 @@ import {
     svgLabels,
     svgLayers,
     svgLines,
+    svgMLLines,
     svgMidpoints,
     svgPoints,
     svgVertices
@@ -69,6 +70,7 @@ export function rendererMap(context) {
     var drawPoints = svgPoints(projection, context);
     var drawVertices = svgVertices(projection, context);
     var drawLines = svgLines(projection, context);
+    var drawMLLines = svgMLLines(projection, context);
     var drawAreas = svgAreas(projection, context);
     var drawMidpoints = svgMidpoints(projection, context);
     var drawLabels = svgLabels(projection, context);
@@ -236,7 +238,8 @@ export function rendererMap(context) {
                     .call(drawVertices.drawSelected, graph, map.extent())
                     .call(drawLines, graph, data, filter)
                     .call(drawAreas, graph, data, filter)
-                    .call(drawMidpoints, graph, data, filter, map.trimmedExtent());
+                    .call(drawMidpoints, graph, data, filter, map.trimmedExtent())
+                    .call(drawMLLines, context.mlLines);
 
                 dispatch.call('drawn', this, { full: false });
 
@@ -337,7 +340,8 @@ export function rendererMap(context) {
             .call(drawAreas, graph, data, filter)
             .call(drawMidpoints, graph, data, filter, map.trimmedExtent())
             .call(drawLabels, graph, data, filter, dimensions, fullRedraw)
-            .call(drawPoints, graph, data, filter);
+            .call(drawPoints, graph, data, filter)
+            .call(drawMLLines, context.mlLines);
 
         dispatch.call('drawn', this, {full: true});
     }
@@ -499,6 +503,7 @@ export function rendererMap(context) {
         redraw(difference, extent);
     };
 
+    map.immediateRedraw = immediateRedraw;
 
     map.mouse = function() {
         var event = mousemove || d3_event;

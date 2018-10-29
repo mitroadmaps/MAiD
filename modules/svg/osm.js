@@ -4,7 +4,7 @@ export function svgOsm(projection, context, dispatch) {
 
     function drawOsm(selection) {
         selection.selectAll('.layer-osm')
-            .data(['covered', 'areas', 'lines', 'points', 'labels'])
+            .data(['covered', 'areas', 'lines', 'mllines', 'points', 'labels'])
             .enter()
             .append('g')
             .attr('class', function(d) { return 'layer-osm layer-' + d; });
@@ -16,6 +16,12 @@ export function svgOsm(projection, context, dispatch) {
             .attr('class', function(d) { return 'layer-areas-group layer-areas-' + d; });
 
         selection.selectAll('.layer-lines').selectAll('.layer-lines-group')
+            .data(['lines', 'targets'])
+            .enter()
+            .append('g')
+            .attr('class', function(d) { return 'layer-lines-group layer-lines-' + d; });
+
+        selection.selectAll('.layer-mllines').selectAll('.layer-lines-group')
             .data(['lines', 'targets'])
             .enter()
             .append('g')

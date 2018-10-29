@@ -483,6 +483,7 @@ export function coreContext() {
     presets = presetIndex();
 
     map = rendererMap(context);
+    context._map = map;
     context.mouse = map.mouse;
     context.extent = map.extent;
     context.pan = map.pan;
@@ -491,6 +492,10 @@ export function coreContext() {
     context.zoomInFurther = map.zoomInFurther;
     context.zoomOutFurther = map.zoomOutFurther;
     context.redrawEnable = map.redrawEnable;
+
+    context.mlLines = {};
+    context.mlInc = {};
+    context.hideLines = false;
 
     _each(services, function(service) {
         if (service && typeof service.init === 'function') {

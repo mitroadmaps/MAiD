@@ -601,3 +601,16 @@ g.midpoint.tag-highway-bridleway .fill {
     stroke-opacity: .8;
     opacity: .8;
 }
+
+/* MAiD */
+path.stroke.mlline {
+    stroke-width: 8;
+    stroke: #ffff00;
+    stroke-opacity: 0.3;
+}
+path.stroke.mlline.hover {
+    stroke: #ff0000;
+}
+path.shadow.mlline {
+    stroke-width: 20;
+}
