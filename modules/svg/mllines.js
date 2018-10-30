@@ -84,17 +84,6 @@ export function svgMLLines(projection, context) {
 			ways = [];
 		}
 
-		var mlways = [];
-		ways.forEach(function(way) {
-			var mlway = {};
-			for(var k in way) {
-				mlway[k] = way[k];
-			}
-			mlway.oid = mlway.id;
-			mlway.id = 'w-9999';
-			mlways.push(mlway);
-		});
-
 		var lineSelection = selection.select('.layer-mllines .layer-lines-lines');
 		var layergroup = lineSelection.selectAll('g.linegroup')
 			.data(['stroke']);
@@ -106,7 +95,7 @@ export function svgMLLines(projection, context) {
 
 		drawLineGroup = function(selection, cls) {
 			var dlines = selection.selectAll('path')
-				.data(mlways, function(d) { return d.oid; });
+				.data(ways, function(d) { return d.oid; });
 
 			dlines.exit()
 				.remove();
@@ -122,13 +111,13 @@ export function svgMLLines(projection, context) {
 
 		var targetSelection = selection.select('.layer-mllines .layer-lines-targets');
 		var targets = [];
-		mlways.forEach(function(way) {
+		ways.forEach(function(way) {
 			for(var i = 0; i < way.nodes.length - 1; i++) {
 				var start = lines[way.nodes[i]];
 				var end = lines[way.nodes[i + 1]];
 				targets.push({
 					type: 'Feature',
-					id: 'w-9999-' + way.id.substr(2) + '00' + i,
+					id: way.id + '-' + i,
 					properties: {
 						target: true,
 						entity: way,
@@ -155,44 +144,43 @@ export function svgMLLines(projection, context) {
 
 				var parts = d.id.split('-');
 				var id = parts[0] + '-' + parts[1];
+				var way = lines[id];
 				// add nodes to graph
 				insertEntities = function(graph) {
-					ways.forEach(function(way) {
-						nodes = [];
-						way.nodes.forEach(function(nodeID) {
-							var loc = lines[nodeID].loc;
-							var exists = function() {
-								if(!(nodeID in context.mlInc)) {
-									return false;
-								}
-								var existingNode = graph.entities[context.mlInc[nodeID].id];
-								if(!existingNode) {
-									return false;
-								} else if(existingNode.loc[0] != loc[0] || existingNode.loc[1] != loc[1]) {
-									return false;
-								}
-								return true;
-							}();
-
-							if(!exists) {
-								var entity = {'loc': loc};
-								entity = osmNode(entity);
-								graph = graph.replace(entity);
-								context.mlInc[nodeID] = entity;
+					nodes = [];
+					way.nodes.forEach(function(nodeID) {
+						var loc = lines[nodeID].loc;
+						var exists = function() {
+							if(!(nodeID in context.mlInc)) {
+								return false;
 							}
-							nodes.push(context.mlInc[nodeID]);
-						});
-						var entity = {'tags': {'highway': 'residential'}};
-						entity = osmWay(entity);
-						nodes.forEach(function(node) {
-							entity = entity.addNode(node.id);
-						});
-						graph = graph.replace(entity);
+							var existingNode = graph.entities[context.mlInc[nodeID].id];
+							if(!existingNode) {
+								return false;
+							} else if(existingNode.loc[0] != loc[0] || existingNode.loc[1] != loc[1]) {
+								return false;
+							}
+							return true;
+						}();
+
+						if(!exists) {
+							var entity = {'loc': loc};
+							entity = osmNode(entity);
+							graph = graph.replace(entity);
+							context.mlInc[nodeID] = entity;
+						}
+						nodes.push(context.mlInc[nodeID]);
 					});
+					var entity = {'tags': {'highway': 'residential'}};
+					entity = osmWay(entity);
+					nodes.forEach(function(node) {
+						entity = entity.addNode(node.id);
+					});
+					graph = graph.replace(entity);
 					return graph;
 				};
 				context.perform(insertEntities);
-				context.mlLines = [];
+				delete context.mlLines[id];
 				context._map.immediateRedraw();
 			})
 			.on('contextmenu', function(d) {

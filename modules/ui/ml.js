@@ -62,18 +62,16 @@ export function uiML(context) {
             .attr('tabindex', -1)
             .on('click', ml)
             .style('background', '#fff');
-
         button
             .append('span')
             .attr('class', 'label')
             .text('Run ML');
 
-        var button = selection.append('button')
+        button = selection.append('button')
             .attr('class', 'col6')
             .attr('tabindex', -1)
             .on('click', jump)
             .style('background', '#fff');
-
         button
             .append('span')
             .attr('class', 'label')
