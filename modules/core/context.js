@@ -495,6 +495,7 @@ export function coreContext() {
 
     context.mlLines = {};
     context.mlInc = {};
+    context.jumps = [];
     context.hideLines = false;
 
     _each(services, function(service) {

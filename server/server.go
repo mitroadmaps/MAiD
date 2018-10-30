@@ -164,6 +164,7 @@ func main() {
 }
 
 func simplify(graph *common.Graph) *common.Graph {
+	origin := graph.Bounds().Min
 	roadSegments := graph.GetRoadSegments()
 	ngraph := &common.Graph{}
 	nodeMap := make(map[int]*common.Node)
@@ -179,14 +180,14 @@ func simplify(graph *common.Graph) *common.Graph {
 				nodeMap[node.ID] = ngraph.AddNode(node.Point)
 			}
 		}
-		points := []common.Point{src.Point}
+		points := []common.Point{src.Point.LonLatToMeters(origin)}
 		for _, edge := range rs.Edges {
-			points = append(points, edge.Dst.Point)
+			points = append(points, edge.Dst.Point.LonLatToMeters(origin))
 		}
 		points = common.RDP(points, 10)
 		nodes := []*common.Node{nodeMap[src.ID]}
 		for _, point := range points[1:len(points)-1] {
-			nodes = append(nodes, ngraph.AddNode(point))
+			nodes = append(nodes, ngraph.AddNode(point.MetersToLonLat(origin)))
 		}
 		nodes = append(nodes, nodeMap[dst.ID])
 		for i := 0; i < len(nodes) - 1; i++ {

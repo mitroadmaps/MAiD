@@ -1027,6 +1027,10 @@
                 }
             }
         },
+        "jump": {
+            "title": "Jump",
+            "key": "J"
+        },
         "intro": {
             "done": "done",
             "ok": "OK",

@@ -29,9 +29,19 @@ export function uiML(context) {
 			response['ml_full'].forEach(function(entity) {
 				context.mlLines[entity.id] = entity;
 			});
+			context.jumps = response['jumps'];
 			context._map.immediateRedraw();
 		};
 		xhr.send(null);
+    }
+
+    function jump() {
+		if(context.jumps.length == 0) {
+			return;
+		}
+		var nextRect = context.jumps[0];
+		context.jumps = context.jumps.slice(1);
+		context.extent(nextRect);
     }
 
     function hide() {
@@ -57,6 +67,22 @@ export function uiML(context) {
             .append('span')
             .attr('class', 'label')
             .text('Run ML');
+
+        var button = selection.append('button')
+            .attr('class', 'col6')
+            .attr('tabindex', -1)
+            .on('click', jump)
+            .style('background', '#fff');
+
+        button
+            .append('span')
+            .attr('class', 'label')
+            .text('Jump');
+
+        var keybinding = d3_keybinding('jump')
+            .on(t('jump.key'), jump);
+        d3_select(document)
+            .call(keybinding);
 
         var keybinding = d3_keybinding('hide')
         	.on('keydown', hide)
