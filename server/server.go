@@ -25,6 +25,7 @@ type OsmObject struct {
 
 type Response struct {
 	MLFull []OsmObject `json:"ml_full"`
+	MLPruned []OsmObject `json:"ml_pruned"`
 	Jumps [][][]float64 `json:"jumps"`
 }
 
@@ -78,8 +79,8 @@ func floodfill(node *common.Node, seenEdges map[int]bool, componentEdges *[]*com
 }
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Printf("usage: %s <graph fname>\n", os.Args[0])
+	if len(os.Args) < 2 {
+		fmt.Printf("usage: %s <graph fname> [pruned fname]\n", os.Args[0])
 		return
 	}
 
@@ -94,6 +95,15 @@ func main() {
 	simpleGraph := simplify(graph)
 	response := Response{
 		MLFull: objects(simpleGraph),
+	}
+	fmt.Println("loading pruned graph")
+	if len(os.Args) >= 3 {
+		graph, err := common.ReadGraph(os.Args[2])
+		if err != nil {
+			panic(err)
+		}
+		graph.MakeBidirectional()
+		response.MLPruned = objects(simplify(graph))
 	}
 	fmt.Println("getting connected components")
 	var components []Component
