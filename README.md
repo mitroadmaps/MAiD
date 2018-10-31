@@ -1,3 +1,8 @@
+MAiD
+====
+
+See README in server folder for information on MAiD.
+
 # iD - friendly JavaScript editor for [OpenStreetMap](https://www.openstreetmap.org/)
 
 [![Build Status](https://travis-ci.org/openstreetmap/iD.svg?branch=master)](https://travis-ci.org/openstreetmap/iD)
