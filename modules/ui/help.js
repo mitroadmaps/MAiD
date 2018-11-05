@@ -480,8 +480,8 @@ export function uiHelp(context) {
             .on(key, togglePane)
             .on([t('background.key'), t('map_data.key')], hidePane);
 
-        d3_select(document)
-            .call(keybinding);
+//        d3_select(document)
+//            .call(keybinding);
 
         uiHelp.hidePane = hidePane;
         uiHelp.togglePane = togglePane;
